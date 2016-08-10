@@ -73,17 +73,19 @@ class ContainerAuthors extends Component {
 
   handleClickOnAuthor(event){
     event.preventDefault()
+    var selectedAuthor = event.target.getAttribute('value')
+    var selectedAuthorObject = this.props.store.getState().authors.find( (author) => { return author.name = event.target.getAttribute('value')})
+
     this.props.store.dispatch({
       type: 'CHANGE_CURRENT_AUTHOR',
-      payload: { currentAuthor: "TOlkien" }
+      payload: selectedAuthorObject
       })
-    }
-
+  }
 
   render(){
     var authors = this.props.store.getState().authors
     var counter = 0
-    var handleClickOnAuthor = this.handleClickOnAuthor
+    var handleClickOnAuthor = this.handleClickOnAuthor.bind(this)
     var allAuthors = authors.map( function(author){
       return(
         <IndividualAuthor key={counter++}
@@ -106,14 +108,17 @@ class IndividualAuthor extends Component {
 
     return(
       <div>
-        <div onClick={this.props.handleClickOnAuthor}>{this.props.authorData.name}</div>
+        <a href="#"
+           onClick={this.props.handleClickOnAuthor}
+           value={this.props.authorData.name}>
+           {this.props.authorData.name}
+        </a>
       </div>
     )
   }
 }
 
 class CurrentAuthor extends Component {
-
   render(){
     var lastCurrentAuthorName
     var currentAuthorArray = this.props.store.getState().current_author
