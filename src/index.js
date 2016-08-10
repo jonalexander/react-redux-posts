@@ -18,35 +18,40 @@ function createStore() {
     render()
   }
 
-  //
   state = reducer(state, {})
-  return { getState, dispatch}
+  //getting copy of state without any changes/actions
+
+  return { getState, dispatch }
   // call store.getState() and store.dispatch(action) to
   // manage/view store
 }
 
 // 2
-function reducer(state = {authors: [], posts: []}, action = {type: ''}){
+function reducer(state = {authors: [], posts: [], current_author: []}, action = {type: '', payload: {}}){
   //pass default state if nothing is present
-  //pass
   switch(action.type){
     case 'ADD_AUTHOR':
-      return {authors: state.authors.concat(action.payload)}
+      return {
+        authors: state.authors.concat(action.payload),
+        posts: state.posts,
+        current_author: state.current_author.concat(action.payload)
+      }
     case 'ADD_POST':
-      return {posts: state.posts.concat(action.payload)}
+      return {
+        authors: state.authors,
+        posts: state.posts.concat(action.payload),
+        current_author: state.current_author
+      }
     default:
       return state
   }
 }
 
-// 3
-function handleOnClick(event){
-  event.preventDefault()
-  var authorInput = document.getElement('author-input').value
-  store.dispatch( {type: 'ADD_AUTHOR', payload: {author: authorInput}} )
+function render() {
+  ReactDOM.render(
+  <App store={store} />,
+  document.getElementById('root')
+  );
 }
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+render()
