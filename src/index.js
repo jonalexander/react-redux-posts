@@ -42,6 +42,12 @@ function reducer(state = {authors: [], posts: [], current_author: []}, action = 
         posts: state.posts.concat(action.payload),
         current_author: state.current_author
       }
+    case 'CHANGE_CURRENT_AUTHOR':
+      return {
+        authors: state.authors,
+        posts: state.posts,
+        current_author: state.current_author.concat(action.payload)
+    }
     default:
       return state
   }

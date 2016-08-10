@@ -8,6 +8,9 @@ class App extends Component {
     return (
       <div className="App">
         <div className="container">
+          <div className="CurrentAuthor">
+            <CurrentAuthor store={this.props.store}/>
+          </div>
           <div className="Author">
             <FormAuthor store={this.props.store}/>
           </div>
@@ -42,7 +45,6 @@ class App extends Component {
 class FormAuthor extends Component {
   //this.props.store
   handleOnSubmitNewAuthor(event){
-    alert('handleOnSubmitNewAuthor working')
     event.preventDefault()
     var authorInput = document.getElementById('author-input').value
     this.props.store.dispatch({
@@ -68,12 +70,26 @@ class FormAuthor extends Component {
 }
 
 class ContainerAuthors extends Component {
+
+  handleClickOnAuthor(event){
+    event.preventDefault()
+    this.props.store.dispatch({
+      type: 'CHANGE_CURRENT_AUTHOR',
+      payload: { currentAuthor: "TOlkien" }
+      })
+    }
+
+
   render(){
     var authors = this.props.store.getState().authors
     var counter = 0
+    var handleClickOnAuthor = this.handleClickOnAuthor
     var allAuthors = authors.map( function(author){
       return(
-        <IndividualAuthor key={counter++} authorData={author} />
+        <IndividualAuthor key={counter++}
+          authorData={author}
+          handleClickOnAuthor={handleClickOnAuthor}
+          />
       )})
 
     return(
@@ -87,13 +103,30 @@ class ContainerAuthors extends Component {
 
 class IndividualAuthor extends Component {
   render(){
+
     return(
       <div>
-        {this.props.authorData.name}
+        <div onClick={this.props.handleClickOnAuthor}>{this.props.authorData.name}</div>
       </div>
     )
   }
 }
+
+class CurrentAuthor extends Component {
+
+  render(){
+    var lastCurrentAuthorName
+    var currentAuthorArray = this.props.store.getState().current_author
+    currentAuthorArray.length > 0 ? lastCurrentAuthorName = currentAuthorArray[ currentAuthorArray.length - 1 ].name : ""
+
+    return(
+      <div>
+        Current Author: {lastCurrentAuthorName}
+      </div>
+    )
+  }
+}
+
 
 /*
 /$$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$$$ /$$$$$$
@@ -119,7 +152,6 @@ class FormPost extends Component {
   }
 
   handleOnSubmitNewPost(event){
-    alert('handleOnSubmitNewPost working')
     event.preventDefault()
     var postTitleInput = document.getElementById('post-title-input').value
     var postTextInput = document.getElementById('post-text-input').value
@@ -166,7 +198,6 @@ class ContainerPosts extends Component {
 
 class IndividualPost extends Component {
   render(){
-    debugger
     return(
       <div>
         <div>{this.props.postData.title}</div>
@@ -175,6 +206,8 @@ class IndividualPost extends Component {
     )
   }
 }
+
+
 //Author
 //AuthorList - container - iterate over authors in store and generate Author
 //<AuthorList data={this.props.store.authors}>
