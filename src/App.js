@@ -4,30 +4,31 @@ import './App.css';
 
 class App extends Component {
   // {this.props.store}
+  // <div className="CurrentAuthor">
+  //   <CurrentAuthor store={this.props.store}/>
+   // </div>
   render() {
     return (
       <div className="App">
         <div className="container">
 
+        <div className="left-half">
           <div className="Author">
             <FormAuthor store={this.props.store}/>
           </div>
-
-          <div className="CurrentAuthor">
-            <CurrentAuthor store={this.props.store}/>
-          </div>
-
           <div className="Author">
             <ContainerAuthors store={this.props.store}/>
           </div>
+        </div>
 
+        <div className="right-half">
           <div className="Post">
             <FormPost store={this.props.store} />
           </div>
-
           <div className="Post">
             <ContainerPosts store={this.props.store}/>
           </div>
+        </div>
 
         </ div>
       </ div>
@@ -58,7 +59,7 @@ class FormAuthor extends Component {
       payload: {
         name: authorInput,
         id: this.props.store.getState().authors.length + 1
-      }})
+    }})
   }
 
   render(){
@@ -66,10 +67,10 @@ class FormAuthor extends Component {
       <form onSubmit={this.handleOnSubmitNewAuthor.bind(this)}>
         <div>
           <input id="author-input" type="text" placeholder="Author Name" />
-        </ div>
+        </div>
         <div className="form-button">
-          <button type="submit" > Add </ button>
-        </ div>
+          <button type="submit"> Add </button>
+        </div>
       </form>
     )
   }
@@ -79,18 +80,20 @@ class ContainerAuthors extends Component {
 
   handleClickOnAuthor(event){
     event.preventDefault()
+
     var selectedAuthor = event.target.getAttribute('value')
-    var selectedAuthorObject = this.props.store.getState().authors.find( (author) => { return author.name = event.target.getAttribute('value')})
+    var selectedAuthorObject = this.props.store.getState().authors.find( (author) => { return author.name === event.target.getAttribute('value')})
 
     this.props.store.dispatch({
       type: 'CHANGE_CURRENT_AUTHOR',
       payload: selectedAuthorObject
-      })
+    })
   }
 
   render(){
-    var authors = this.props.store.getState().authors
     var counter = 0
+
+    var authors = this.props.store.getState().authors
     var handleClickOnAuthor = this.handleClickOnAuthor.bind(this)
 
     var allAuthors = authors.map( function(author){
@@ -103,7 +106,7 @@ class ContainerAuthors extends Component {
 
     return(
       <div>
-        Authors
+        <h5>Authors</h5>
         {allAuthors}
       </div>
     )
@@ -118,6 +121,7 @@ class IndividualAuthor extends Component {
         <a href="#"
            onClick={this.props.handleClickOnAuthor}
            value={this.props.authorData.name}>
+           {this.props.authorData.id}
            {this.props.authorData.name}
         </a>
       </div>
@@ -129,7 +133,7 @@ class CurrentAuthor extends Component {
   render(){
     var lastCurrentAuthorName
     var currentAuthorArray = this.props.store.getState().current_author
-    lastCurrentAuthorName = currentAuthorArray.length > 0 ? currentAuthorArray[ currentAuthorArray.length - 1 ].name : ""
+    lastCurrentAuthorName = currentAuthorArray.length > 0 ? currentAuthorArray[currentAuthorArray.length - 1].name : ""
 
     return(
       <div>
@@ -141,14 +145,15 @@ class CurrentAuthor extends Component {
 
 
 /*
-/$$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$$$ /$$$$$$
-| $$__  $$ /$$__  $$ /$$__  $$|__  $$__//$$__  $$
-| $$  \ $$| $$  \ $$| $$  \__/   | $$  | $$  \__/
-| $$$$$$$/| $$  | $$|  $$$$$$    | $$  |  $$$$$$
-| $$____/ | $$  | $$ \____  $$   | $$   \____  $$
-| $$      | $$  | $$ /$$  \ $$   | $$   /$$  \ $$
-| $$      |  $$$$$$/|  $$$$$$/   | $$  |  $$$$$$/
-|__/       \______/  \______/    |__/   \______/
+██▓███  ▒█████    ██████ ▄▄▄█████▓ ██████
+▓██░  ██▒██▒  ██▒▒██    ▒ ▓  ██▒ ▓▒██    ▒
+▓██░ ██▓▒██░  ██▒░ ▓██▄   ▒ ▓██░ ▒░ ▓██▄
+▒██▄█▓▒ ▒██   ██░  ▒   ██▒░ ▓██▓ ░  ▒   ██▒
+▒██▒ ░  ░ ████▓▒░▒██████▒▒  ▒██▒ ░▒██████▒▒
+▒▓▒░ ░  ░ ▒░▒░▒░ ▒ ▒▓▒ ▒ ░  ▒ ░░  ▒ ▒▓▒ ▒ ░
+░▒ ░      ░ ▒ ▒░ ░ ░▒  ░ ░    ░   ░ ░▒  ░ ░
+░░      ░ ░ ░ ▒  ░  ░  ░    ░     ░  ░  ░
+           ░ ░        ░                ░
 */
 
 
@@ -158,7 +163,7 @@ class FormPost extends Component {
       <form onSubmit={this.handleOnSubmitNewPost.bind(this)}>
         <div><input id="post-title-input" type="text" placeholder="Post Title" /></ div>
         <div><input id="post-text-input" type="textarea" placeholder="Post Body" /></ div>
-        <div className="form-button"><button type="submit"> Post </ button></ div>
+        <button type="submit"> Post </button>
       </ form>
     )
   }
@@ -169,7 +174,6 @@ class FormPost extends Component {
     var postTextInput = document.getElementById('post-text-input').value
     var currentAuthorArray = this.props.store.getState().current_author
     var lastCurrentAuthorId = currentAuthorArray[ currentAuthorArray.length - 1 ].id
-
     this.props.store.dispatch( {
       type: 'ADD_POST',
       payload: {
@@ -179,6 +183,7 @@ class FormPost extends Component {
         author_id: lastCurrentAuthorId
         } // closes payload
       } )
+      debugger
   }
 
   render(){
