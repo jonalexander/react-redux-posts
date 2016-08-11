@@ -7,8 +7,8 @@ const store = createStore(reducer)
 
 // 1
 function createStore() {
-  let state
-
+  //let state = {authors: [{name: 'tolkien', id: 1}], posts: [{title: 'hobbit', text: 'the hobbit', author_id: 1}], current_author: [{name: 'tolkien', id: 1}]}
+  let state = {authors: [], posts: [], current_author: []}
   const getState = function(){
     return state
   }

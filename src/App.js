@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import '/'
 
 class App extends Component {
   // {this.props.store}
-  // <div className="CurrentAuthor">
-  //   <CurrentAuthor store={this.props.store}/>
-   // </div>
+
   render() {
     return (
       <div className="App">
@@ -22,6 +21,9 @@ class App extends Component {
         </div>
 
         <div className="right-half">
+        <div className="CurrentAuthor">
+          <CurrentAuthor store={this.props.store}/>
+         </div>
           <div className="Post">
             <FormPost store={this.props.store} />
           </div>
@@ -53,7 +55,8 @@ class FormAuthor extends Component {
   //this.props.store
   handleOnSubmitNewAuthor(event){
     event.preventDefault()
-    var authorInput = document.getElementById('author-input').value
+    var authorInput = document.getElementById('add-author-input').value
+    document.getElementById('add-author-input').value = ""
     this.props.store.dispatch({
       type: 'ADD_AUTHOR',
       payload: {
@@ -66,10 +69,9 @@ class FormAuthor extends Component {
     return(
       <form onSubmit={this.handleOnSubmitNewAuthor.bind(this)}>
         <div>
-          <input id="author-input" type="text" placeholder="Author Name" />
+          <input id="add-author-input" type="text" placeholder="Add Author" />
         </div>
         <div className="form-button">
-          <button type="submit"> Add </button>
         </div>
       </form>
     )
@@ -105,7 +107,7 @@ class ContainerAuthors extends Component {
       )})
 
     return(
-      <div>
+      <div className="author-container">
         <h5>Authors</h5>
         {allAuthors}
       </div>
@@ -137,7 +139,7 @@ class CurrentAuthor extends Component {
 
     return(
       <div>
-        Current Author: {lastCurrentAuthorName}
+        <h5>{lastCurrentAuthorName}</h5>
       </div>
     )
   }
@@ -172,6 +174,8 @@ class FormPost extends Component {
     event.preventDefault()
     var postTitleInput = document.getElementById('post-title-input').value
     var postTextInput = document.getElementById('post-text-input').value
+    document.getElementById('post-title-input').value = ""
+    document.getElementById('post-text-input').value = ""
     var currentAuthorArray = this.props.store.getState().current_author
     var lastCurrentAuthorId = currentAuthorArray[ currentAuthorArray.length - 1 ].id
     this.props.store.dispatch( {
@@ -183,7 +187,6 @@ class FormPost extends Component {
         author_id: lastCurrentAuthorId
         } // closes payload
       } )
-      debugger
   }
 
   render(){
@@ -198,16 +201,24 @@ class FormPost extends Component {
 
 class ContainerPosts extends Component {
   render(){
-    var posts = this.props.store.getState().posts
     var counter = 0
-    var allPosts = posts.map( function(post){
+    var posts = this.props.store.getState().posts
+    if (this.props.store.getState().current_author.length > 0) {
+        var currentAuthorArray = this.props.store.getState().current_author
+        var lastCurrentAuthorId = currentAuthorArray[ currentAuthorArray.length - 1 ].id
+    }
+
+    var selectedPosts = posts.map( function(post){
       return(
-        <IndividualPost key={counter++} postData={post}/>
+        <div>
+          {lastCurrentAuthorId && post.author_id === lastCurrentAuthorId ?  <IndividualPost key={counter++} postData={post}/> : <div/>}
+        </div>
       )})
 
+//
     return(
       <div>
-        {allPosts}
+        {selectedPosts}
       </div>
     )
   }

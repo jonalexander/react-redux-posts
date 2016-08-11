@@ -3,10 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
+    "bootstrap": "^3.3.7",
+    "react-bootstrap": "^0.30.2",
     "react-scripts": "0.2.1"
   },
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "react": "^15.2.1",
+    "react-bootstrap": "^0.30.2",
     "react-dom": "^15.2.1",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2"
