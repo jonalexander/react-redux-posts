@@ -8,21 +8,27 @@ class App extends Component {
     return (
       <div className="App">
         <div className="container">
-          <div className="CurrentAuthor">
-            <CurrentAuthor store={this.props.store}/>
-          </div>
+
           <div className="Author">
             <FormAuthor store={this.props.store}/>
           </div>
+
+          <div className="CurrentAuthor">
+            <CurrentAuthor store={this.props.store}/>
+          </div>
+
           <div className="Author">
             <ContainerAuthors store={this.props.store}/>
           </div>
+
           <div className="Post">
             <FormPost store={this.props.store} />
           </div>
+
           <div className="Post">
             <ContainerPosts store={this.props.store}/>
           </div>
+
         </ div>
       </ div>
     );
@@ -86,6 +92,7 @@ class ContainerAuthors extends Component {
     var authors = this.props.store.getState().authors
     var counter = 0
     var handleClickOnAuthor = this.handleClickOnAuthor.bind(this)
+
     var allAuthors = authors.map( function(author){
       return(
         <IndividualAuthor key={counter++}
@@ -122,7 +129,7 @@ class CurrentAuthor extends Component {
   render(){
     var lastCurrentAuthorName
     var currentAuthorArray = this.props.store.getState().current_author
-    currentAuthorArray.length > 0 ? lastCurrentAuthorName = currentAuthorArray[ currentAuthorArray.length - 1 ].name : ""
+    lastCurrentAuthorName = currentAuthorArray.length > 0 ? currentAuthorArray[ currentAuthorArray.length - 1 ].name : ""
 
     return(
       <div>
